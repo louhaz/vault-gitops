@@ -1,24 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vault-common
+  name: ibm-vault-bootstrap
   namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "20"
 spec:
   destination:
-    namespace: vault
+    namespace: openshift-gitops
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: components/vault-common/base
-    repoURL: https://github.com/louhaz/vault-gitops
+    path: ./argocd
     targetRevision: HEAD
+    repoURL: https://github.com/louhaz/vault-gitops
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-
-# Made with Bob

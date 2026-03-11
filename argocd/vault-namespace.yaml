@@ -12,7 +12,7 @@ spec:
   project: default
   source:
     path: components/vault-namespace/base
-    repoURL: https://github.com/IBM-Security/verify-gitops-demo
+    repoURL: https://github.com/louhaz/vault-gitops
     targetRevision: HEAD
   syncPolicy:
     automated:
