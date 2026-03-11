@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: vault-operator-group
+  namespace: vault
+spec:
+  targetNamespaces:
+    - vault
+
+# Made with Bob

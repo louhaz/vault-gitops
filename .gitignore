@@ -1,0 +1,24 @@
+# Vault backups
+vault-backups/
+*.snap
+
+# Vault tokens and keys
+.vault-token
+unseal-keys.txt
+root-token.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log
