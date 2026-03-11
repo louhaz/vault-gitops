@@ -110,7 +110,7 @@ Verify Vault is unsealed:
 kubectl exec -n vault vault-0 -- vault status
 ```
 
-### Step 6: Configure Vault for Applications
+### Step 6: Configure Vault for Applications (IBM Verify Example)
 
 Login with the root token:
 
@@ -235,88 +235,6 @@ Then access:
 ### Via Service (from within cluster)
 - **Address**: `http://vault.vault.svc.cluster.local:8200`
 
-## Sync Waves
-
-The ArgoCD applications use sync waves to ensure proper deployment order:
-
-1. **Wave 10**: Vault namespace and OperatorGroup
-2. **Wave 20**: Common RBAC (ServiceAccount, ClusterRole)
-3. **Wave 30**: Vault Secrets Operator
-4. **Wave 40**: Vault server deployment
-
-Applications consuming Vault should use higher sync waves (50+).
-
-## Security Considerations
-
-### Production Recommendations
-
-1. **Unseal Keys**: 
-   - Store unseal keys in a secure key management system (AWS KMS, Azure Key Vault, etc.)
-   - Never commit unseal keys to git
-   - Consider using auto-unseal for production
-
-2. **Root Token**:
-   - Rotate the root token after initial setup
-   - Use limited-privilege tokens for day-to-day operations
-   - Revoke root token when not needed
-
-3. **TLS**:
-   - Enable TLS for production deployments
-   - Use proper certificates (not self-signed)
-
-4. **Audit Logging**:
-   - Enable audit logging to track all Vault access
-   ```bash
-   kubectl exec -n vault vault-0 -- vault audit enable file file_path=/vault/logs/audit.log
-   ```
-
-5. **Backup**:
-   - Regularly backup Vault data using the provided scripts
-   - Test restore procedures
-
-6. **High Availability**:
-   - Scale Vault to 3+ replicas for production
-   - Use Raft storage backend for HA
-
-## Troubleshooting
-
-### Vault Pod Not Starting
-
-```bash
-kubectl get pods -n vault
-kubectl logs -n vault vault-0
-kubectl describe pod -n vault vault-0
-```
-
-### Vault Sealed After Restart
-
-Vault seals automatically on restart. Unseal it again:
-
-```bash
-kubectl exec -n vault vault-0 -- vault operator unseal <key-1>
-kubectl exec -n vault vault-0 -- vault operator unseal <key-2>
-kubectl exec -n vault vault-0 -- vault operator unseal <key-3>
-```
-
-### Check Vault Status
-
-```bash
-kubectl exec -n vault vault-0 -- vault status
-```
-
-### Check Operator Status
-
-```bash
-kubectl get subscription -n openshift-operators vault-secrets-operator
-kubectl get csv -n openshift-operators | grep vault
-```
-
-### View Vault Logs
-
-```bash
-kubectl logs -n vault vault-0 -f
-```
-
 ## Documentation
 
 - [HashiCorp Vault Documentation](https://www.vaultproject.io/docs)
@@ -326,21 +244,3 @@ kubectl logs -n vault vault-0 -f
 ## Example: IBM Verify Access Integration
 
 See the [verify-gitops-demo](https://github.com/louhaz/verify-gitops-demo) repository for a complete example of integrating this Vault infrastructure with IBM Verify Access.
-
-## License
-
-See [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-This is infrastructure code. Changes should be:
-1. Tested in a development environment
-2. Reviewed by the platform team
-3. Applied during maintenance windows for production
-
-## Support
-
-For issues or questions:
-- Review Vault logs: `kubectl logs -n vault vault-0`
-- Check Vault status: `kubectl exec -n vault vault-0 -- vault status`
-- Consult HashiCorp Vault documentation
